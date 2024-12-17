@@ -1,4 +1,5 @@
 import json
+import datetime
 #This is the Task Tracker CLI
 
 '''
@@ -23,33 +24,50 @@ Ensure to handle errors and edge cases gracefully.
 '''
 
 #Creating a class Task Tracker
-class TaskTracker:
-    #creating the add task function to add a new task
-    def add_task(self,task_id,task,task_details,task_date, tasks):
-        self.details = {
-            task_id:{
-                "Task":task,
-                "Task Details":task_details,
-                "Task Deadline":task_date
-            }
-        }
-        return json.dumps(self.details)
+class TastTracker:
+    def add_task(self, task, task_details, task_date, tasks):
+        if tasks == {}:
+            task_id = 1
+        else:
+            task_id = tasks.keys()[-1]
 
-    def update_task(self, task_id,upd_task, upd_task_details, upd_task_date, tasks):
+        tasks[task_id] = {
+            "Task":task,
+            "Task Details":task_details,
+            "Task Date":task_date,
+            "Status":"todo",
+            "Created_At": str(datetime.datetime.now())
+        }
+        return tasks
+
+    def update_task(self,task_id, upd_task, upd_task_details, upd_task_date, tasks):
         if task_id in tasks:
             if upd_task:
                 tasks[task_id]["Task"] = upd_task
             if upd_task_details:
                 tasks[task_id]["Task Details"] = upd_task_details
             if upd_task_date:
-                tasks[task_id]["Task Deadline"] = upd_task_date
-
+                tasks[task_id]["Task Date"] = upd_task_date
             return tasks
         else:
-            return "Task ID does not exists."
+            return "Task does not exists."
 
-tasks = open("tasks_record.txt", 'w')
+    def delete_tasks(self, task_id, tasks):
+        if task_id in tasks:
+            del tasks[task_id]
+            return tasks
+        else:
+            return "Task does not exists."
 
-manager = TaskTracker()
-p = manager.add_task(task_id='1',task="Study", task_details="Complete Unit 1 of CN", task_date="29 August 2024", tasks=tasks)
-print(p)
+tasks = {}
+
+p = TastTracker()
+
+command = input("Add/Update/Delete?")
+
+if command.lower() == "add":
+    task = str(input("Task:"))
+    task_details = str(input("Task Details:"))
+    task_date = str(input("Task Date:"))
+    tasks = p.add_task(task, task_details, task_date, tasks)
+    print(tasks)
