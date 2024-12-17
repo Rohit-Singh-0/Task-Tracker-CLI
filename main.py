@@ -30,7 +30,7 @@ parser.add_argument(
     '-l', '--list', help='type list "todo" or "in progress" or "done" or "all" for showing tasks', required=False)
 
 parser.add_argument(
-    '-u', '--update', help='Type new description', required=False)
+    '-u', '--update', action="append", help='Type new description', required=False)
 parser.add_argument(
     '-m', '--mark', action="append", help='Type "in progress" or "done" and the id of the task to mark in the next argument.', required=False)
 parser.add_argument(
@@ -64,3 +64,6 @@ elif args.delete:
 elif args.mark:
     # print(args.mark)
     mark_task(args.mark[0], int(args.mark[1]))
+
+elif args.update:
+    update_task(int(args.update[0]), str(args.update[1]))
