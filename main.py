@@ -1,7 +1,6 @@
-import json
-import datetime
-#This is the Task Tracker CLI
-
+#importing necessary libraries
+import argparse
+from Tracker_functions import *
 '''
 Requirements
 The application should run from the command line, accept user actions and inputs as arguments, and store the tasks in a JSON file. The user should be able to:
@@ -23,51 +22,45 @@ Do not use any external libraries or frameworks to build this project.
 Ensure to handle errors and edge cases gracefully.
 '''
 
-#Creating a class Task Tracker
-class TastTracker:
-    def add_task(self, task, task_details, task_date, tasks):
-        if tasks == {}:
-            task_id = 1
-        else:
-            task_id = tasks.keys()[-1]
+parser = argparse.ArgumentParser()
 
-        tasks[task_id] = {
-            "Task":task,
-            "Task Details":task_details,
-            "Task Date":task_date,
-            "Status":"todo",
-            "Created_At": str(datetime.datetime.now())
-        }
-        return tasks
+# Adding argument
+parser.add_argument('-a', '--add', help='Fill the task to add', required=False)
+parser.add_argument(
+    '-l', '--list', help='type list "todo" or "in progress" or "done" or "all" for showing tasks', required=False)
 
-    def update_task(self,task_id, upd_task, upd_task_details, upd_task_date, tasks):
-        if task_id in tasks:
-            if upd_task:
-                tasks[task_id]["Task"] = upd_task
-            if upd_task_details:
-                tasks[task_id]["Task Details"] = upd_task_details
-            if upd_task_date:
-                tasks[task_id]["Task Date"] = upd_task_date
-            return tasks
-        else:
-            return "Task does not exists."
+parser.add_argument(
+    '-u', '--update', help='Type new description', required=False)
+parser.add_argument(
+    '-m', '--mark', action="append", help='Type "in progress" or "done" and the id of the task to mark in the next argument.', required=False)
+parser.add_argument(
+    '-d', '--delete', help='Just type del', required=False)
 
-    def delete_tasks(self, task_id, tasks):
-        if task_id in tasks:
-            del tasks[task_id]
-            return tasks
-        else:
-            return "Task does not exists."
 
-tasks = {}
+# Processing argument
+args = parser.parse_args()
 
-p = TastTracker()
+# Accessing arguments
+print(f'Added: {args.add if args.add else "No task added"}')
+print(f'List: {args.list if args.list else "No list choosed"}')
+# print(f'id: {args.pick if args.pick else "No id choosed"}')
+print(f'update: {args.update if args.update else "Nothing updated"}')
+print(f'mark: {args.mark if args.mark else "Nothing marked"}')
+print(f'delete: {args.delete if args.delete else "Nothing marked"}')
 
-command = input("Add/Update/Delete?")
 
-if command.lower() == "add":
-    task = str(input("Task:"))
-    task_details = str(input("Task Details:"))
-    task_date = str(input("Task Date:"))
-    tasks = p.add_task(task, task_details, task_date, tasks)
-    print(tasks)
+if args.add:
+    add_command(args.add)
+
+elif args.list:
+    if str(args.list) == "all":
+        list_all_tasks()
+    else:
+        list_filter(str(args.list))
+
+elif args.delete:
+    delete_task(int(args.delete))
+
+elif args.mark:
+    # print(args.mark)
+    mark_task(args.mark[0], int(args.mark[1]))

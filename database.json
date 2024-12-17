@@ -5,5 +5,12 @@
         "status": "done",
         "created_At": "2024-12-15 22:33:34.553735",
         "updated_At": "2024-12-17 11:14:28.280432"
+    },
+    {
+        "id": 2,
+        "description": "World",
+        "status": "todo",
+        "created_At": "2024-12-17 11:21:59.912111",
+        "updated_At": "Not updated yet"
     }
 ]
